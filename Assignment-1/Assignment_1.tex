@@ -13,7 +13,7 @@
  
 \begin{document}
 \title{EE5803 - FPGA LAB \\ Assignment-1}
-\author{Venkatesh Parvathala}
+\author{Venkatesh Parvathala \\ EE22RESCH01005}
  
 \maketitle
 \textbf{Q}. Reduce the following boolean expression to its simplest form using K-Map.
@@ -86,5 +86,8 @@ In order to implement it using NAND gates, we will write the above SOP form as b
 \begin{equation}
     F(X,Y,Z,W) = \overline{(\overline{\bar{X}\bar{Z}} . \overline{\bar{Y}Z} . \overline{XZ\bar{W}})}
 \end{equation}
+
+
+The above equation can be implemented using NAND gates and the corresponding code is available at \textit{./assignment\_1.c}
 
 \end{document}
