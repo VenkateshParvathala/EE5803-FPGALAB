@@ -7,9 +7,6 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.gates.logic.US}
 \usetikzlibrary{circuits.ee.IEC}
-
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\Z}{\mathbb{Z}}
  
 \begin{document}
 \title{EE5803 - FPGA LAB \\ Assignment-1}
@@ -24,35 +21,37 @@
 \textbf{Sol}. First we will build a Truth Table for the given expression as below,
 
 \begin{table}[h]
-    \centering
-    \begin{tabular}{|c|c|c|c|c|}
-    \hline
-    X & Y & Z & W & \textbf{F} \\ \hline
-    0 & 0 & 0 & 0 & \textbf{1}\\
-    0 & 0 & 0 & 1 & \textbf{1}\\
-    0 & 0 & 1 & 0 & \textbf{1}\\
-    0 & 0 & 1 & 1 & \textbf{1}\\
-    0 & 1 & 0 & 0 & \textbf{1}\\
-    0 & 1 & 0 & 1 & \textbf{1}\\
-    0 & 1 & 1 & 0 & \textbf{0}\\
-    0 & 1 & 1 & 1 & \textbf{0}\\
-    1 & 0 & 0 & 0 & \textbf{0}\\
-    1 & 0 & 0 & 1 & \textbf{0}\\
-    1 & 0 & 1 & 0 & \textbf{1}\\
-    1 & 0 & 1 & 1 & \textbf{1}\\
-    1 & 1 & 0 & 0 & \textbf{0}\\
-    1 & 1 & 0 & 1 & \textbf{0}\\
-    1 & 1 & 1 & 0 & \textbf{1}\\
-    1 & 1 & 1 & 1 & \textbf{0}\\ \hline
-    \end{tabular}
-    \caption{The Truth Table}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+X & Y & Z & W & \textbf{F} \\ \hline
+0 & 0 & 0 & 0 & \textbf{1}\\
+0 & 0 & 0 & 1 & \textbf{1}\\
+0 & 0 & 1 & 0 & \textbf{1}\\
+0 & 0 & 1 & 1 & \textbf{1}\\
+0 & 1 & 0 & 0 & \textbf{1}\\
+0 & 1 & 0 & 1 & \textbf{1}\\
+0 & 1 & 1 & 0 & \textbf{0}\\
+0 & 1 & 1 & 1 & \textbf{0}\\
+1 & 0 & 0 & 0 & \textbf{0}\\
+1 & 0 & 0 & 1 & \textbf{0}\\
+1 & 0 & 1 & 0 & \textbf{1}\\
+1 & 0 & 1 & 1 & \textbf{1}\\
+1 & 1 & 0 & 0 & \textbf{0}\\
+1 & 1 & 0 & 1 & \textbf{0}\\
+1 & 1 & 1 & 0 & \textbf{1}\\
+1 & 1 & 1 & 1 & \textbf{0}\\ \hline
+\end{tabular}
+\caption{Truth Table}
 \end{table}
 
-\newpage
-K-Map for the given expression as below
 
-\begin{center}
-\begin{karnaugh-map}[4][4][1][][]
+\newpage
+We can express the same boolean expression in K-Map as follows
+
+\begin{figure}[h]
+    \centering
+    \begin{karnaugh-map}[4][4][1][][]
     \maxterms{6,7,8,9,12,13,15}
     \minterms{0,1,2,3,4,5,10,11,14}
     \implicant{0}{5}
@@ -63,8 +62,8 @@ K-Map for the given expression as below
     node [pos=0.7, below left, anchor=north east] {$XY$} % X label
     ++(135:1);
         
-    \end{karnaugh-map}   
-\end{center}
+\end{karnaugh-map}
+\end{figure}
 
 
 The implicants in 0,1,4,5 gives us $\bar{X}\bar{Z}$
@@ -86,8 +85,60 @@ In order to implement it using NAND gates, we will write the above SOP form as b
 \begin{equation}
     F(X,Y,Z,W) = \overline{(\overline{\bar{X}\bar{Z}} . \overline{\bar{Y}Z} . \overline{XZ\bar{W}})}
 \end{equation}
+\newpage
 
+The corresponding circuit diagram with only NAND gates can be drawn as follows.
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[label distance=2mm, scale=2,
+  connection/.style={draw,circle,fill=black,inner sep=1.5pt}
+  ]
+\node (x) at (0.5,0) {$X$};
+\node (y) at (1.5,0) {$Y$};
+\node (z) at (2.5,0) {$Z$};
+\node (w) at (3.5,0) {$W$};
+\node[nand gate US, draw, rotate=-90, logic gate inputs=nn, scale=1.5] at ($(x)+(0.5,-1)$) (t01) {};
+\node[nand gate US, draw, rotate=-90, logic gate inputs=nn, scale=1.5] at ($(y)+(0.5,-1)$) (t02) {};
+\node[nand gate US, draw, rotate=-90, logic gate inputs=nn, scale=1.5] at ($(z)+(0.5,-1)$) (t03) {};
+\node[nand gate US, draw, rotate=-90, logic gate inputs=nn, scale=1.5] at ($(w)+(0.5,-1)$) (t04) {};
+\node[nand gate US, draw, rotate=0, logic gate inputs=nn, scale=1.5] at ($(w)+(1.5,-2)$) (t1) {};
+\node[nand gate US, draw, rotate=0, logic gate inputs=nn, scale=1.5] at ($(w)+(1.5,-3)$) (t2) {};
+\node[nand gate US, draw, rotate=0, logic gate inputs=nnn, scale=1.5] at ($(w)+(1.5,-4)$) (t3) {};
+\node[nand gate US, draw, logic gate inputs=nnn, scale=1.25] at ($(t3.output) + (1, 1)$) (orTot) {};
+\node (im1) at ($(t1.output)+(0.2,0.2)$) {$\bar{X}\bar{Z}$};
+\node (im2) at ($(t2.output)+(0.2,0.2)$) {$\bar{Y}Z$};
+\node (im3) at ($(t3.output)+(0.2,-0.2)$) {$XZ\bar{W}$};
+\draw (x) -- ($(x) + (0,-4.5)$);
+\draw (y) -- ($(y) + (0,-4.5)$);
+\draw (z) -- ($(z) + (0,-4.5)$);
+\draw (w) -- ($(w) + (0,-4.5)$);
+\draw (0.5,-0.5) -| (t01.input 1) ;
+\draw (0.5,-0.5) -| (t01.input 2) ;
+\draw (1.5,-0.5) -| (t02.input 1) ;
+\draw (1.5,-0.5) -| (t02.input 2) ;
+\draw (2.5,-0.5) -| (t03.input 1) ;
+\draw (2.5,-0.5) -| (t03.input 2) ;
+\draw (3.5,-0.5) -| (t04.input 1) ;
+\draw (3.5,-0.5) -| (t04.input 2) ;
+\draw (t01.output) -- ($(x) + (0.5,-4.5)$);
+\draw (t02.output) -- ($(y) + (0.5,-4.5)$);
+\draw (t03.output) -- ($(z) + (0.5,-4.5)$);
+\draw (t04.output) -- ($(w) + (0.5,-4.5)$);
+\draw (t01.output) |- (t1.input 1) node[connection,pos=0.5]{};
+\draw (t03.output) |- (t1.input 2) node[connection,pos=0.5]{};
+\draw (t02.output) |- (t2.input 1) node[connection,pos=0.5]{};
+\draw (z) |- (t2.input 2) node[connection,pos=0.5]{};
+\draw (x) |- (t3.input 1) node[connection,pos=0.5]{};
+\draw (z) |- (t3.input 2) node[connection,pos=0.5]{};
+\draw (t04.output) |- (t3.input 3) node[connection,pos=0.5]{};
+\draw (t1.output) -- ([xshift=0.4cm]t1.output) |- (orTot.input 1);
+\draw (t2.output) -- ([xshift=0.3cm]t2.output) |- (orTot.input 2);
+\draw (t3.output) -- ([xshift=0.3cm]t3.output) |- (orTot.input 3);
+\draw (orTot.output) -- node[above]{$F$} ($(orTot) + (1, 0)$);
+\end{circuitikz}
+\caption{Circuit Diagram using NAND gates}
+\label{ckt1}
+\end{figure}
 
-The above equation can be implemented using NAND gates and the corresponding code is available at \textit{./assignment\_1.c}
-
+The above logic circuit is realized using a C-program and the corresponding code is available at \textit{./assignment\_1.c}
 \end{document}
