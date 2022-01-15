@@ -1,0 +1,90 @@
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{karnaugh-map}
+\usepackage{circuitikz}
+\usepackage{tikz}
+\usetikzlibrary{shapes.gates.logic.US}
+\usetikzlibrary{circuits.ee.IEC}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\begin{document}
+\title{EE5803 - FPGA LAB \\ Assignment-1}
+\author{Venkatesh Parvathala}
+ 
+\maketitle
+\textbf{Q}. Reduce the following boolean expression to its simplest form using K-Map.
+\begin{equation}
+    F(X,Y,Z,W)=\sum(0,1,2,3,4,5,10,11,14)
+\end{equation}
+
+\textbf{Sol}. First we will build a Truth Table for the given expression as below,
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    X & Y & Z & W & \textbf{F} \\ \hline
+    0 & 0 & 0 & 0 & \textbf{1}\\
+    0 & 0 & 0 & 1 & \textbf{1}\\
+    0 & 0 & 1 & 0 & \textbf{1}\\
+    0 & 0 & 1 & 1 & \textbf{1}\\
+    0 & 1 & 0 & 0 & \textbf{1}\\
+    0 & 1 & 0 & 1 & \textbf{1}\\
+    0 & 1 & 1 & 0 & \textbf{0}\\
+    0 & 1 & 1 & 1 & \textbf{0}\\
+    1 & 0 & 0 & 0 & \textbf{0}\\
+    1 & 0 & 0 & 1 & \textbf{0}\\
+    1 & 0 & 1 & 0 & \textbf{1}\\
+    1 & 0 & 1 & 1 & \textbf{1}\\
+    1 & 1 & 0 & 0 & \textbf{0}\\
+    1 & 1 & 0 & 1 & \textbf{0}\\
+    1 & 1 & 1 & 0 & \textbf{1}\\
+    1 & 1 & 1 & 1 & \textbf{0}\\ \hline
+    \end{tabular}
+    \caption{The Truth Table}
+\end{table}
+
+\newpage
+K-Map for the given expression as below
+
+\begin{center}
+\begin{karnaugh-map}[4][4][1][][]
+    \maxterms{6,7,8,9,12,13,15}
+    \minterms{0,1,2,3,4,5,10,11,14}
+    \implicant{0}{5}
+    \implicantedge{3}{2}{11}{10}
+    \implicant{14}{10}
+    \draw[color=black, ultra thin] (0, 4) --
+    node [pos=0.7, above right, anchor=south west] {$ZW$} % Y label
+    node [pos=0.7, below left, anchor=north east] {$XY$} % X label
+    ++(135:1);
+        
+    \end{karnaugh-map}   
+\end{center}
+
+
+The implicants in 0,1,4,5 gives us $\bar{X}\bar{Z}$
+
+The implicatns in 2,3,10,11 gives us $\bar{Y}Z$
+
+The implicants in 10,14 gives us $XZ\bar{W}$ \\
+
+Combining all the above terms will give us 
+\begin{equation}
+    F(X,Y,Z,W) = \bar{X}\bar{Z} + \bar{Y}Z + XZ\bar{W}
+\end{equation}
+
+In order to implement it using NAND gates, we will write the above SOP form as below
+\begin{equation}
+    F(X,Y,Z,W) = \overline{(\overline{\bar{X}\bar{Z} + \bar{Y}Z + XZ\bar{W}})}
+\end{equation}
+
+\begin{equation}
+    F(X,Y,Z,W) = \overline{(\overline{\bar{X}\bar{Z}} . \overline{\bar{Y}Z} . \overline{XZ\bar{W}})}
+\end{equation}
+
+\end{document}
