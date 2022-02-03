@@ -1,0 +1,90 @@
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{karnaugh-map}
+\usepackage{circuitikz}
+\usepackage{tikz}
+\usetikzlibrary{shapes.gates.logic.US}
+\usetikzlibrary{circuits.ee.IEC}
+ 
+\begin{document}
+\title{EE5803 - FPGA LAB \\ Assignment-2}
+\author{Venkatesh Parvathala \\ EE22RESCH01005}
+ 
+\maketitle
+\textbf{Q}. Verify the result obtained in Assignment-1 using Arduino. Given problem is
+\begin{equation}
+    F(X,Y,Z,W)=\sum(0,1,2,3,4,5,10,11,14)
+\end{equation}
+
+\textbf{Sol}. The given boolean expression can be expressed in K-Map as follows,
+
+\begin{figure}[h]
+    \centering
+    \begin{karnaugh-map}[4][4][1][][]
+    \maxterms{6,7,8,9,12,13,15}
+    \minterms{0,1,2,3,4,5,10,11,14}
+    \implicant{0}{5}
+    \implicantedge{3}{2}{11}{10}
+    \implicant{14}{10}
+    \draw[color=black, ultra thin] (0, 4) --
+    node [pos=0.7, above right, anchor=south west] {$ZW$} % Y label
+    node [pos=0.7, below left, anchor=north east] {$XY$} % X label
+    ++(135:1);
+        
+\end{karnaugh-map}
+\end{figure}
+
+
+The implicants in 0,1,4,5 gives us $\bar{X}\bar{Z}$
+
+The implicatns in 2,3,10,11 gives us $\bar{Y}Z$
+
+The implicants in 10,14 gives us $XZ\bar{W}$ \\
+
+Combining all the above terms will give us 
+\begin{equation}
+    F(X,Y,Z,W) = \bar{X}\bar{Z} + \bar{Y}Z + XZ\bar{W}
+\end{equation}
+
+
+The above boolean expression which is same as obtained in Assignment-1 is verified using the following code in Arduino.
+\newpage
+
+The corresponding code to be flashed into Arduino is as follows,
+\begin{verbatim}
+#include <Arduino.h>
+
+# define X 2
+# define Y 3
+# define Z 4
+# define W 5
+
+int x, y, z, w, out;
+
+void setup() {
+  pinMode(LED_BUILTIN,OUTPUT);
+  pinMode(X, INPUT);
+  pinMode(Y, INPUT);
+  pinMode(Z, INPUT);
+  pinMode(W, INPUT);
+  // put your setup code here, to run once:
+}
+
+void loop() {
+	x = digitalRead(X);
+	y = digitalRead(Y);
+	z = digitalRead(Z);
+	w = digitalRead(W);
+
+	out = ((!x)&&(!z)) | ((!y)&&(z)) | ((x)&&(z)&&(!w)); 
+	if (out==1)
+		digitalWrite(LED_BUILTIN, HIGH);
+	else
+		digitalWrite(LED_BUILTIN, LOW);
+}
+\end{verbatim}
+
+The above code can be found in Git with the name Assignment-2.cpp and the same is verified by flashing into the Arduino.
+\end{document}
