@@ -1,4 +1,4 @@
-.include "/home/ramesh720/m328Pdef.inc"
+.include "/home/venkatesh/m328Pdef.inc"
 
 Start:
 	ldi r17, 0b11000011 ; identifying input pins 10,11,12,13
@@ -23,26 +23,26 @@ Start:
 	and r24,r17 ;x
 
 	ldi r25,0b00000001
-    ldi r26,0b00000001
+        ldi r26,0b00000001
 	ldi r27,0b00000001
 
-    eor r21, r25 ; w'
-    eor r23, r25 ; y'
+        eor r21, r25 ; w'
+        eor r23, r25 ; y'
 
 	mov r26,r24 ; x
-    mov r27,r22 ; z
+        mov r27,r22 ; z
 
-    eor r24,r25 ; x'
-    eor r22,r25 ; z'
+        eor r24,r25 ; x'
+        eor r22,r25 ; z'
 
-    and r24,r22 ; im1 = x'z'
-    and r23,r27 ; im2 = y'z
-    or r24,r23 ; im1+im2 = x'z'+y'z
+        and r24,r22 ; im1 = x'z'
+        and r23,r27 ; im2 = y'z
+        or r24,r23 ; im1+im2 = x'z'+y'z
 
 	and r26,r27 ; xz
-    and r26,r21 ; im3 = xzw'
+        and r26,r21 ; im3 = xzw'
 
-    or r24,r26 ; im1+im2+im3 = x'z'+y'z+xzw'
+        or r24,r26 ; im1+im2+im3 = x'z'+y'z+xzw'
 
 	ldi r20,0b00000010
 	rcall loopl
